@@ -11,6 +11,7 @@ buildNumber.properties
 .mvn/timing.properties
 .gradle/
 .idea/
+build/
 
 ## File-based project format:
 *.iws
