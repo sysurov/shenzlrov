@@ -10,7 +10,12 @@ public class Main {
     public static void main(String[] arg){
         Network mNetwork=new Network();
         SendRovData.setWorkMode((byte)0x02);
-        SendRovData.setVelocity((byte)0xDD,(byte)0x6c);
-        SendRovData.setUpDown((byte)0xFF);
+        Thread mSyncThread = new Thread(mNetwork);
+        mSyncThread.start();
+        int i=0;
+        SendRovData.setVelocity((byte) (0xDD), (byte) 0x00);
+        //SendRovData.setUpDown((byte) 0xDD);
+        while(true);
+
     }
 }

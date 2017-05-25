@@ -1,7 +1,6 @@
 package edu.sysu.rovteam.szlrov.Network;
 
 import edu.sysu.rovteam.szlrov.ProtocolData.RovInitData;
-import edu.sysu.rovteam.szlrov.Tools.Bytetools.ByteUtils;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -13,7 +12,7 @@ import java.net.SocketAddress;
 /**
  * Core network module
  */
-public class Network {
+public class Network implements Runnable {
     public static int Port=RovInitData.PORT_INIT;
     public static boolean ReadFlags = false;
     public static boolean SendFlags = false;
@@ -29,17 +28,16 @@ public class Network {
         connect();
         network=this;
     }
-    public Runnable ReadThread = new Runnable(){
-        public void run(){
-            if(network==null){
-                return;
-            }
-            if(socket.isConnected()){
-                ReadFlags=true;
-                ByteUtils.ToBytesIsInt();
+    public void run() {
+        while(true) {
+            SendRovData.sync();
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+
             }
         }
-    };
+    }
     public static Network getNetwork() throws NullPointerException{
         if(network == null){
             throw new NullPointerException();
@@ -60,7 +58,7 @@ public class Network {
         try {
             System.out.print("...");
             socket = new Socket();
-            socket.connect(endpoint,1000);
+            socket.connect(endpoint,10000);
             dataInputStream=new DataInputStream(socket.getInputStream());
             dataOutputStream=new DataOutputStream(socket.getOutputStream());
 
@@ -82,6 +80,7 @@ public class Network {
             }catch (IOException iex){
                 iex.printStackTrace();
                 System.out.println("Error sending command!");
+                connect();
             }
         }
     }
